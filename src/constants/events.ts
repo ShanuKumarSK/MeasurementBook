@@ -1,0 +1,7 @@
+export const EVENTS = {
+
+    VIDEO_UPLOADED: 'VIDEO_UPLOADED',
+
+    VIDEO_DELETED: 'VIDEO_DELETED',
+
+};

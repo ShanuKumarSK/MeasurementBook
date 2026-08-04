@@ -1,0 +1,78 @@
+import React from 'react';
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  StyleSheet,
+  StatusBar,
+  ViewStyle,
+  StyleProp,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import theme from '../../../theme';
+
+interface Props {
+  children: React.ReactNode;
+
+  scroll?: boolean;
+
+  style?: StyleProp<ViewStyle>;
+}
+
+const ScreenWrapper = ({
+  children,
+  scroll = true,
+  style,
+}: Props) => {
+  const Container = scroll ? ScrollView : React.Fragment;
+
+  return (
+    <SafeAreaView
+      edges={['left', 'right', 'bottom']}
+      style={styles.safeArea}
+    >
+      <StatusBar
+        backgroundColor={theme.colors.primary}
+        barStyle="light-content"
+      />
+
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {scroll ? (
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={[styles.container, style]}>
+              {children}
+            </ScrollView>
+          ) : (
+            <>{children}</>
+          )}
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
+
+export default ScreenWrapper;
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+
+  flex: {
+    flex: 1,
+  },
+
+  container: {
+    flexGrow: 1,
+    paddingBottom: 30,
+  },
+});
