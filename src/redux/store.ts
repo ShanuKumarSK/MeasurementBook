@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import measurementBookReducer
+from './slices/measurementBookSlice';
 
 
 export const store = configureStore({
   reducer: {
+     measurementBook:measurementBookReducer,
   },
 });
 

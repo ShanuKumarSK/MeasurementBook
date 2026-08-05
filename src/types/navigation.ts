@@ -5,6 +5,10 @@ export type RootStackParamList = {
 
     Login: {
         role: 'BLOCK' | 'PANCHAYAT' | 'AGENCY';
+        state: {
+            id: number;
+            name: string;
+        };
     };
 
     StateSelection: {

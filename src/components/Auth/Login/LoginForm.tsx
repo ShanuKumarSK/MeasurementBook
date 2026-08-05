@@ -8,6 +8,7 @@ import {
     AppButton,
     AppInput,
     AppText,
+    RadioButton
 } from '../../common';
 
 import AuthHeader from '../../common/AuthHeader';
@@ -24,22 +25,53 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const STATES = ['ANDAMAN AND NICOBAR'];
 
 interface Props {
+
     showPanchayat?: boolean;
-    loginType: 'BLOCK' | 'PANCHAYAT';
+
+    showAgencyFields?: boolean;
+
+    showBlock?: boolean;
+
+    loginType: 'BLOCK' | 'PANCHAYAT' | 'AGENCY';
+
+    selectedState?: {
+        id: number;
+        name: string;
+    };
+
 }
+
+const LEVELS = [
+    'Zila Panchayat',
+    'Block Panchayat',
+    'Gram Panchayat',
+];
+
+const AGENCY_CATEGORY = [
+    'Civil',
+    'Electrical',
+    'Forest',
+];
+
+const EXECUTING_AGENCY = [
+    'ABC Construction',
+    'XYZ Pvt Ltd',
+];
 
 const LoginForm = ({
     showPanchayat = false,
+    showBlock = false,
+    showAgencyFields = false,
     loginType,
+    selectedState,
 }: Props) => {
 
-    const selectedState = STATES[0];
     const navigation = useNavigation<NavigationProp>();
 
     return (
         <>
             <AuthHeader
-                title={loginType === 'BLOCK' ? 'Block Login' : 'Panchayat Login'}
+                title={loginType === 'BLOCK' ? 'Block Login' : loginType === 'PANCHAYAT' ? 'Panchayat Login' : 'Agency Login'}
                 subtitle="Enter your details to login"
                 icon="leaf-outline"
             />
@@ -55,12 +87,13 @@ const LoginForm = ({
                 </AppText>
 
                 <AppInput
-                    value={selectedState}
+                    value={selectedState?.name ?? ''}
+                    placeholder="Select State"
                     editable={false}
                     leftIcon="map"
                     rightText="Change"
                     onPress={() =>
-                        navigation.navigate('StateSelection', {
+                        navigation.replace('StateSelection', {
                             role: loginType,
                         })
                     }
@@ -94,19 +127,23 @@ const LoginForm = ({
                     rightIcon="chevron-down-outline"
                 />
 
-                <AppText
-                    variant="caption"
-                    weight="600"
-                    color="textSecondary"
-                    style={styles.label}>
-                    BLOCK
-                </AppText>
+                {showBlock && (
+                    <>
+                        <AppText
+                            variant="caption"
+                            weight="600"
+                            color="textSecondary"
+                            style={styles.label}>
+                            BLOCK
+                        </AppText>
 
-                <AppInput
-                    placeholder="Select Block"
-                    leftIcon="grid-outline"
-                    rightIcon="chevron-down-outline"
-                />
+                        <AppInput
+                            placeholder="Select Block"
+                            leftIcon="grid-outline"
+                            rightIcon="chevron-down-outline"
+                        />
+                    </>
+                )}
 
                 {showPanchayat && (
                     <>
@@ -120,6 +157,53 @@ const LoginForm = ({
 
                         <AppInput
                             placeholder="Select Panchayat"
+                            leftIcon="people-outline"
+                            rightIcon="chevron-down-outline"
+                        />
+                    </>
+                )}
+
+                {showAgencyFields && (
+                    <>
+                        <AppText
+                            variant="caption"
+                            weight="600"
+                            color="textSecondary"
+                            style={styles.label}>
+                            LEVEL OF WORK
+                        </AppText>
+
+                        {LEVELS.map(level => (
+                            <RadioButton
+                                key={level}
+                                label={level}
+                            />
+                        ))}
+
+                        <AppText
+                            variant="caption"
+                            weight="600"
+                            color="textSecondary"
+                            style={styles.label}>
+                            AGENCY CATEGORY
+                        </AppText>
+
+                        <AppInput
+                            placeholder="Select Agency Category"
+                            leftIcon="grid-outline"
+                            rightIcon="chevron-down-outline"
+                        />
+
+                        <AppText
+                            variant="caption"
+                            weight="600"
+                            color="textSecondary"
+                            style={styles.label}>
+                            EXECUTING AGENCY
+                        </AppText>
+
+                        <AppInput
+                            placeholder="Select Executing Agency"
                             leftIcon="people-outline"
                             rightIcon="chevron-down-outline"
                         />
@@ -157,7 +241,9 @@ const LoginForm = ({
                 <AppButton
                     title="Login"
                     style={styles.button}
-                    onPress={() => { }}
+                    onPress={() =>
+                        navigation.replace('MeasurementBook')
+                    }
                 />
 
             </View>

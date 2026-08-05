@@ -10,9 +10,8 @@ import {
   ScreenWrapper,
   SearchBar,
   AppText,
+  SelectionHeader,
 } from '../../../components/common';
-
-import AuthHeader from '../../../components/common/AuthHeader';
 import theme from '../../../theme';
 
 const STATES = [
@@ -33,26 +32,23 @@ const StateSelection = ({ navigation, route }: any) => {
   const [search, setSearch] = useState('');
 
   const filteredStates = useMemo(() => {
+    const keyword = search.trim().toLowerCase();
+
+    if (!keyword) {
+      return STATES;
+    }
 
     return STATES.filter(item =>
-      item.name
-        .replace('\n', ' ')
-        .toLowerCase()
-        .includes(search.toLowerCase()),
+      item.name.replace(/\n/g, ' ').toLowerCase().includes(keyword),
     );
-
   }, [search]);
 
   return (
 
     <ScreenWrapper scroll={false}>
 
-      <AuthHeader
-        title=""
-        subtitle=""
-        icon="leaf-outline"
-        // showBack
-        // onBackPress={() => navigation.goBack()}
+      <SelectionHeader
+        onBackPress={() => navigation.goBack()}
       />
 
       <View style={styles.card}>
@@ -65,6 +61,7 @@ const StateSelection = ({ navigation, route }: any) => {
 
         <FlatList
           data={filteredStates}
+          extraData={search}
           numColumns={2}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
@@ -76,7 +73,7 @@ const StateSelection = ({ navigation, route }: any) => {
               activeOpacity={0.8}
               style={styles.stateCard}
               onPress={() =>
-                navigation.navigate('Login', {
+                navigation.replace('Login', {
                   role,
                   state: item,
                 })

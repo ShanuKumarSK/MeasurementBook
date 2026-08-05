@@ -136,7 +136,7 @@ export default AppInput;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xs,
   },
 
   labelContainer: {
@@ -147,17 +147,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
-    borderWidth: 1,
-
-    borderColor: theme.colors.border,
-
     borderRadius: theme.radius.lg,
-
-    backgroundColor: theme.colors.white,
-
+    backgroundColor: '#F8F9FB',
+    borderWidth: 1,
+    borderColor: '#ECECEC',
     paddingHorizontal: 15,
-
     height: 54,
   },
 
