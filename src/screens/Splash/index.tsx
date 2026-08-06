@@ -20,7 +20,7 @@ const Splash = ({ navigation }: any) => {
   }, []);
 
   return (
-  <>
+  <View>
     <StatusBar
       backgroundColor={theme.colors.primary}
       barStyle="light-content"
@@ -77,7 +77,7 @@ const Splash = ({ navigation }: any) => {
       </View>
 
     </View>
-  </>
+  </View>
 );
 };
 

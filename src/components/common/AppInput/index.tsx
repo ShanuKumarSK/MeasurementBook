@@ -99,7 +99,7 @@ const AppInput = ({
                 color={theme.colors.textSecondary}
               />
             </TouchableOpacity>
-          ) : (<>
+          ) : (<View>
             {rightText ? (
               <AppText
                 variant="body"
@@ -115,7 +115,7 @@ const AppInput = ({
                 color={theme.colors.textSecondary}
               />
             ) : null}
-          </>
+          </View>
           )}
         </View>
 

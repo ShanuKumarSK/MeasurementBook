@@ -1,4 +1,4 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -36,7 +36,11 @@ const MeasurementBook = ({ navigation }: any) => {
     <ScreenWrapper>
 
       <SelectionHeader
+        title=""
+        subtitle=""
+        icon="bar-chart"
         onBackPress={() => navigation.goBack()}
+        onMenuPress={() => { }}
       />
 
       <View style={styles.card}>

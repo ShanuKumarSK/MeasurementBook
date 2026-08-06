@@ -23,7 +23,7 @@ const AuthHeader = ({
   icon,
 }: Props) => {
   return (
-    <>
+    <View>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -71,7 +71,7 @@ const AuthHeader = ({
         </AppText>
 
       </View>
-    </>
+    </View>
   );
 };
 

@@ -27,7 +27,7 @@ const SelectionHeader = ({
   onMenuPress,
 }: Props) => {
   return (
-    <>
+    <View>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -102,7 +102,7 @@ const SelectionHeader = ({
         </AppText>
 
       </View>
-    </>
+    </View>
   );
 };
 

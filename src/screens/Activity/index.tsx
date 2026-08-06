@@ -26,8 +26,8 @@ const Activity = ({ navigation }: any) => {
     const [drawerVisible, setDrawerVisible] = useState(false);
 
     return (
-        <>
-            <ScreenWrapper>
+        <View>
+            <ScreenWrapper scroll={false}>
 
                 <SelectionHeader
                     title="Activity Component"
@@ -171,7 +171,7 @@ const Activity = ({ navigation }: any) => {
                 onClose={() => setDrawerVisible(false)}
 
             />
-        </>
+        </View>
     );
 };
 

@@ -27,7 +27,7 @@ const Login = ({ route }: Props) => {
       )}
 
       {role === 'PANCHAYAT' && (
-        <PanchayatLoginForm selectedState={state} />
+        <PanchayatLoginForm />
       )}
 
       {role === 'AGENCY' && (

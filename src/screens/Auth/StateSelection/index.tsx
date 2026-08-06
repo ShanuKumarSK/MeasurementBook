@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,42 +13,58 @@ import {
   SelectionHeader,
 } from '../../../components/common';
 import theme from '../../../theme';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { fetchStates, setSelectedState, } from '../../../redux/slices/locationSlice';
 
-const STATES = [
-  { id: 1, name: 'ANDAMAN\nAND NICOBAR' },
-  { id: 2, name: 'ANDHRA PRADESH' },
-  { id: 3, name: 'ARUNACHAL\nPRADESH' },
-  { id: 4, name: 'ASSAM' },
-  { id: 5, name: 'BIHAR' },
-  { id: 6, name: 'GUJARAT' },
-  { id: 7, name: 'GOA' },
-  { id: 8, name: 'JHARKHAND' },
-];
+// const STATES = [
+//   { id: 1, name: 'ANDAMAN\nAND NICOBAR' },
+//   { id: 2, name: 'ANDHRA PRADESH' },
+//   { id: 3, name: 'ARUNACHAL\nPRADESH' },
+//   { id: 4, name: 'ASSAM' },
+//   { id: 5, name: 'BIHAR' },
+//   { id: 6, name: 'GUJARAT' },
+//   { id: 7, name: 'GOA' },
+//   { id: 8, name: 'JHARKHAND' },
+// ];
 
 const StateSelection = ({ navigation, route }: any) => {
 
   const { role } = route.params;
-
   const [search, setSearch] = useState('');
+  const dispatch = useAppDispatch();
+  const { states, loading, } = useAppSelector(state => state.location,);
+
+  console.log('States:', states);
+
 
   const filteredStates = useMemo(() => {
     const keyword = search.trim().toLowerCase();
 
     if (!keyword) {
-      return STATES;
+      return states;
     }
 
-    return STATES.filter(item =>
+    return states.filter(item =>
       item.name.replace(/\n/g, ' ').toLowerCase().includes(keyword),
     );
-  }, [search]);
+  }, [search, states]);
+
+  useEffect(() => {
+     console.log('useEffect Called');
+    dispatch(fetchStates());
+  }, []);
+
 
   return (
 
     <ScreenWrapper scroll={false}>
 
       <SelectionHeader
+        title=""
+        subtitle=""
+        icon="bar-chart"
         onBackPress={() => navigation.goBack()}
+        onMenuPress={() => { }}
       />
 
       <View style={styles.card}>
@@ -72,11 +88,15 @@ const StateSelection = ({ navigation, route }: any) => {
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.stateCard}
-              onPress={() =>
+              onPress={() => {
+                dispatch(
+                  setSelectedState(item),
+                );
                 navigation.replace('Login', {
                   role,
                   state: item,
                 })
+              }
               }>
 
               <AppText

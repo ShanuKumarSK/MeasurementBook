@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -7,6 +7,8 @@ import {
 import {
     AppButton,
     AppInput,
+    AppSelect,
+    AppSelectModal,
     AppText,
     RadioButton
 } from '../../common';
@@ -19,6 +21,8 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types/navigation';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { clearBlocks, clearDistricts, clearPanchayats, fetchBlocks, fetchDistricts, fetchPanchayats, setSelectedBlock, setSelectedDistrict, setSelectedPanchayat, } from '../../../redux/slices/locationSlice';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -30,14 +34,7 @@ interface Props {
 
     showAgencyFields?: boolean;
 
-    showBlock?: boolean;
-
     loginType: 'BLOCK' | 'PANCHAYAT' | 'AGENCY';
-
-    selectedState?: {
-        id: number;
-        name: string;
-    };
 
 }
 
@@ -60,16 +57,56 @@ const EXECUTING_AGENCY = [
 
 const LoginForm = ({
     showPanchayat = false,
-    showBlock = false,
     showAgencyFields = false,
     loginType,
-    selectedState,
 }: Props) => {
 
     const navigation = useNavigation<NavigationProp>();
+    const [districtVisible, setDistrictVisible] = useState(false);
+    const [blockVisible, setBlockVisible] = useState(false);
+    const [panchayatVisible, setPanchayatVisible] = useState(false);
+    const dispatch = useAppDispatch();
+    const {
+        selectedState,
+        selectedDistrict,
+        selectedBlock,
+        selectedPanchayat,
+        districts,
+        blocks,
+        panchayats,
+        loading,
+    } = useAppSelector(state => state.location);
+
+    const redux = useAppSelector(state => state.location);
+
+    console.log('Redux Location:', redux);
+
+    useEffect(() => {
+
+        if (!selectedState) {
+            return;
+        }
+
+        dispatch(clearDistricts());
+        dispatch(clearBlocks());
+        dispatch(clearPanchayats());
+
+        dispatch(fetchDistricts(selectedState.id));
+
+    }, [selectedState]);
+
+    console.log("Props District :", selectedDistrict);
+    console.log("Redux District :", redux.selectedDistrict);
+    console.log('Selected State:', selectedState);
+    console.log('Selected District:', selectedDistrict);
+    console.log('Selected Block:', selectedBlock);
+    console.log('Selected Panchayat:', selectedPanchayat);
+    console.log('Districts:', districts);
+    console.log('Blocks:', blocks);
+    console.log('Panchayats:', panchayats);
 
     return (
-        <>
+        <View>
             <AuthHeader
                 title={loginType === 'BLOCK' ? 'Block Login' : loginType === 'PANCHAYAT' ? 'Panchayat Login' : 'Agency Login'}
                 subtitle="Enter your details to login"
@@ -121,32 +158,31 @@ const LoginForm = ({
                     DISTRICT
                 </AppText>
 
-                <AppInput
+                <AppSelect
                     placeholder="Select District"
+                    value={selectedDistrict?.name}
                     leftIcon="business-outline"
-                    rightIcon="chevron-down-outline"
+                    onPress={() => setDistrictVisible(true)}
                 />
+                <View>
+                    <AppText
+                        variant="caption"
+                        weight="600"
+                        color="textSecondary"
+                        style={styles.label}>
+                        BLOCK
+                    </AppText>
 
-                {showBlock && (
-                    <>
-                        <AppText
-                            variant="caption"
-                            weight="600"
-                            color="textSecondary"
-                            style={styles.label}>
-                            BLOCK
-                        </AppText>
-
-                        <AppInput
-                            placeholder="Select Block"
-                            leftIcon="grid-outline"
-                            rightIcon="chevron-down-outline"
-                        />
-                    </>
-                )}
+                    <AppSelect
+                        placeholder="Select Block"
+                        value={selectedBlock?.name}
+                        leftIcon="grid-outline"
+                        onPress={() => setBlockVisible(true)}
+                    />
+                </View>
 
                 {showPanchayat && (
-                    <>
+                    <View>
                         <AppText
                             variant="caption"
                             weight="600"
@@ -155,16 +191,17 @@ const LoginForm = ({
                             PANCHAYAT
                         </AppText>
 
-                        <AppInput
+                        <AppSelect
                             placeholder="Select Panchayat"
+                            value={selectedPanchayat?.name}
                             leftIcon="people-outline"
-                            rightIcon="chevron-down-outline"
+                            onPress={() => setPanchayatVisible(true)}
                         />
-                    </>
+                    </View>
                 )}
 
                 {showAgencyFields && (
-                    <>
+                    <View>
                         <AppText
                             variant="caption"
                             weight="600"
@@ -207,7 +244,7 @@ const LoginForm = ({
                             leftIcon="people-outline"
                             rightIcon="chevron-down-outline"
                         />
-                    </>
+                    </View>
                 )}
 
                 <AppText
@@ -247,7 +284,51 @@ const LoginForm = ({
                 />
 
             </View>
-        </>
+
+            <AppSelectModal
+                visible={districtVisible}
+                title="Select District"
+                data={districts}
+                onClose={() => setDistrictVisible(false)}
+                onSelect={item => {
+
+                    dispatch(setSelectedDistrict(item));
+
+                    dispatch(fetchBlocks(item.id));
+
+                }}
+            />
+
+            <AppSelectModal
+                visible={blockVisible}
+                title="Select Block"
+                data={blocks}
+                onClose={() => setBlockVisible(false)}
+                onSelect={item => {
+
+                    dispatch(setSelectedBlock(item));
+
+                    if (loginType === 'PANCHAYAT') {
+
+                        dispatch(fetchPanchayats(item.id));
+
+                    }
+
+                }}
+            />
+
+            <AppSelectModal
+                visible={panchayatVisible}
+                title="Select Panchayat"
+                data={panchayats}
+                onClose={() => setPanchayatVisible(false)}
+                onSelect={item => {
+
+                    dispatch(setSelectedPanchayat(item));
+
+                }}
+            />
+        </View>
     );
 };
 

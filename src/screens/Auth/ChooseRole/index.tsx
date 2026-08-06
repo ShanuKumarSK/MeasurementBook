@@ -42,7 +42,7 @@ const ROLES: RoleItem[] = [
 
 const ChooseRole = ({ navigation }: any) => {
   return (
-    <ScreenWrapper>
+    <ScreenWrapper scroll={false}>
 
       <AuthHeader
         title="Choose Role"
