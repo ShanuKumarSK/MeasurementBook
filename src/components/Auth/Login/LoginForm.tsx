@@ -44,15 +44,18 @@ const LEVELS = [
     'Gram Panchayat',
 ];
 
-const AGENCY_CATEGORY = [
-    'Civil',
-    'Electrical',
-    'Forest',
+const ROLE_CODES = [
+    'ROLE001',
+    'ROLE002',
+    'ROLE003',
+    'ROLE004',
 ];
 
-const EXECUTING_AGENCY = [
-    'ABC Construction',
-    'XYZ Pvt Ltd',
+const LOGIN_LEVELS = [
+    'State Level',
+    'District Level',
+    'Block Level',
+    'Panchayat Level',
 ];
 
 const LoginForm = ({
@@ -65,6 +68,10 @@ const LoginForm = ({
     const [districtVisible, setDistrictVisible] = useState(false);
     const [blockVisible, setBlockVisible] = useState(false);
     const [panchayatVisible, setPanchayatVisible] = useState(false);
+    const [roleCodeVisible, setRoleCodeVisible] = useState(false);
+    const [loginLevelVisible, setLoginLevelVisible] = useState(false);
+    const [selectedRoleCode, setSelectedRoleCode] = useState('');
+    const [selectedLoginLevel, setSelectedLoginLevel] = useState('');
     const dispatch = useAppDispatch();
     const {
         selectedState,
@@ -94,6 +101,18 @@ const LoginForm = ({
         dispatch(fetchDistricts(selectedState.id));
 
     }, [selectedState]);
+
+    const getCurrentFinancialYear = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+
+        return month >= 4
+            ? `${year}-${year + 1}`
+            : `${year - 1}-${year}`;
+    };
+
+    const CURRENT_FINANCIAL_YEAR = getCurrentFinancialYear();
 
     console.log("Props District :", selectedDistrict);
     console.log("Redux District :", redux.selectedDistrict);
@@ -144,10 +163,15 @@ const LoginForm = ({
                     FINANCIAL YEAR
                 </AppText>
 
-                <AppInput
+                {/* <AppInput
                     placeholder="Select Financial Year"
                     leftIcon="calendar-outline"
                     rightIcon="chevron-down-outline"
+                /> */}
+                <AppInput
+                    value={CURRENT_FINANCIAL_YEAR}
+                    editable={false}
+                    leftIcon="calendar-outline"
                 />
 
                 <AppText
@@ -252,6 +276,36 @@ const LoginForm = ({
                     weight="600"
                     color="textSecondary"
                     style={styles.label}>
+                    ROLE CODE
+                </AppText>
+
+                <AppSelect
+                    placeholder="Select Role Code"
+                    value={selectedRoleCode}
+                    leftIcon="code-working-outline"
+                    onPress={() => setRoleCodeVisible(true)}
+                />
+
+                <AppText
+                    variant="caption"
+                    weight="600"
+                    color="textSecondary"
+                    style={styles.label}>
+                    LOGIN LEVEL
+                </AppText>
+
+                <AppSelect
+                    placeholder="Select Login Level"
+                    value={selectedLoginLevel}
+                    leftIcon="layers-outline"
+                    onPress={() => setLoginLevelVisible(true)}
+                />
+
+                <AppText
+                    variant="caption"
+                    weight="600"
+                    color="textSecondary"
+                    style={styles.label}>
                     USER ID
                 </AppText>
 
@@ -328,6 +382,35 @@ const LoginForm = ({
 
                 }}
             />
+
+            <AppSelectModal
+                visible={roleCodeVisible}
+                title="Select Role Code"
+                data={ROLE_CODES.map((code, index) => ({
+                    id: index + 1,
+                    name: code,
+                }))}
+                onClose={() => setRoleCodeVisible(false)}
+                onSelect={item => {
+                    setSelectedRoleCode(item.name);
+                    setRoleCodeVisible(false);
+                }}
+            />
+
+            <AppSelectModal
+                visible={loginLevelVisible}
+                title="Select Login Level"
+                data={LOGIN_LEVELS.map((level, index) => ({
+                    id: index + 1,
+                    name: level,
+                }))}
+                onClose={() => setLoginLevelVisible(false)}
+                onSelect={item => {
+                    setSelectedLoginLevel(item.name);
+                    setLoginLevelVisible(false);
+                }}
+            />
+            
         </View>
     );
 };

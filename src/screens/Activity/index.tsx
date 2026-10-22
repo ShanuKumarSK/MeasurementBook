@@ -26,7 +26,7 @@ const Activity = ({ navigation }: any) => {
     const [drawerVisible, setDrawerVisible] = useState(false);
 
     return (
-        <View>
+        <>
             <ScreenWrapper scroll={false}>
 
                 <SelectionHeader
@@ -171,7 +171,7 @@ const Activity = ({ navigation }: any) => {
                 onClose={() => setDrawerVisible(false)}
 
             />
-        </View>
+        </>
     );
 };
 
