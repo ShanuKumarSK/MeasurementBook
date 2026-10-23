@@ -3,7 +3,7 @@ import { Buffer } from 'buffer';
 
 import { BASE_URL } from './endpoints';
 import {
-  BASIC_USERNAME,
+  USERNAME,
   BASIC_PASSWORD,
 } from '../utils/basicAuth';
 
@@ -16,7 +16,7 @@ api.interceptors.request.use(
   config => {
 
     const auth = Buffer.from(
-      `${BASIC_USERNAME}:${BASIC_PASSWORD}`,
+      `${USERNAME}:${BASIC_PASSWORD}`,
     ).toString('base64');
 
     config.headers.Authorization = `Basic ${auth}`;

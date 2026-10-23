@@ -16,3 +16,10 @@ export const ENDPOINTS = {
     '/StateServices/LocationMaster_lgd.svc/panchayats',
 
 };
+
+export const MEASUREMENT_BOOK_BASE_URL =
+  'https://nregarep1.dord.gov.in/webapi';
+
+export const MEASUREMENT_BOOK_ENDPOINTS = {
+  MEASUREMENT_BOOK: '/api/Measurement_book',
+};
